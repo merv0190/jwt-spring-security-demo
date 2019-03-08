@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonValue;
 public enum ErrorCode {
     ALREADYAUTHENTICATED(1),
     AUTHENTICATION(2),
+    FORBIDDENRESOURCE(3),
     SERVERERROR(98),
     UNKNOWN(100);
 

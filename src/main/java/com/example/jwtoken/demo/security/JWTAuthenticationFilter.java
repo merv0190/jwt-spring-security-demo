@@ -123,7 +123,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             response.addCookie(jwtCookie);
         } catch (Exception ex) {
             ex.printStackTrace();
-            log.error(ex.getLocalizedMessage(), ex);
+            log.error(ex.getMessage(), ex);
             throw new AuthenticationServiceException("");
         }
     }
