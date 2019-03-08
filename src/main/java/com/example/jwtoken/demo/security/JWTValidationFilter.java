@@ -1,16 +1,11 @@
 package com.example.jwtoken.demo.security;
 
-import com.example.jwtoken.demo.common.errorHandling.ErrorResponse;
 import com.example.jwtoken.demo.common.exception.InvalidJWTokenException;
-import com.example.jwtoken.demo.enumeration.ErrorCode;
 import com.example.jwtoken.demo.properties.JWTProperties;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
@@ -33,15 +28,9 @@ import java.util.stream.Collectors;
 @Component
 @Slf4j
 public class JWTValidationFilter extends OncePerRequestFilter {
-    private final ObjectMapper mapper;
-
     @Autowired
     private JWTProperties jwtProperties;
 
-    @Autowired
-    public JWTValidationFilter(ObjectMapper mapper) {
-        this.mapper = mapper;
-    }
     @Override
     protected void doFilterInternal(HttpServletRequest httpServletRequest,
                                     HttpServletResponse httpServletResponse,
@@ -66,12 +55,7 @@ public class JWTValidationFilter extends OncePerRequestFilter {
                 ex.printStackTrace();
                 log.error(ex.getMessage(), ex);
                 SecurityContextHolder.clearContext();
-                httpServletResponse.setContentType(MediaType.APPLICATION_JSON_VALUE);
-                httpServletResponse.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
-                this.mapper.writeValue(httpServletResponse.getWriter(),
-                        ErrorResponse.of("Sorry! Something went wrong, our engineers are on it",
-                                ErrorCode.UNKNOWN,
-                                HttpStatus.INTERNAL_SERVER_ERROR));
+                throw ex;
             }
         }
     }
